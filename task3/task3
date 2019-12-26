@@ -1,0 +1,89 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <numeric>
+#include <algorithm>
+#include <fstream>
+#include <string>
+using namespace std;
+class vect{
+    private: 
+    double x,y,z,n;
+    public:
+    double norm(){
+        double a;
+        a = x*x+y*y+z*z;
+    }
+    void read(){
+
+    }
+    vect operator <(const vect other){
+        norm() < other.norm();
+    }
+
+};
+class arraystat{
+    private:
+    vector<int> vec;
+    int m;
+    public:
+    
+    int max(){
+        int a;
+        a = vec.back();
+        return a;
+    }
+    int min(){
+        int a;
+        a = vec.front();
+        return a;
+    }
+    double mean(){
+        double a,b;
+        a = accumulate (vec.begin(),vec.end(),0);
+        b = a/vec.size();
+        return b;
+    }
+    double rms(){
+        double summ, rm;
+        vector<int> squares(vec.size());
+        transform (vec.begin(),vec.end(),squares.begin(),[](int n){return n*n;});
+        summ = accumulate(squares.begin(),squares.end(),0);
+        rm = sqrt(summ*summ - m*m);
+        return rm;
+    }
+    void print(){
+        for (int item : vec) {
+            cout << " " << item;
+        }
+
+    }
+    void read(string fname ){
+        int a;
+        ifstream file(fname,ifstream::in);
+        if (!file.good()){
+            cerr << "Can't open file " << fname << endl;
+            exit(1);
+        }
+        while(! file.eof()  ){
+        file >> a;
+        vec.push_back(a);
+        }
+        sort(vec.begin(),vec.end());
+        m = mean();
+    }
+};
+
+int main(){
+    int max, min, mean, rms;
+    string name;
+    arraystat array;
+    cout << "Write name of file " << name << endl;
+    array.read(name);
+    array.print();
+    cout << "max = " << array.max() << endl;
+    cout << "min = " << array.min() << endl;
+    cout << "mean =" << array.mean() << endl;
+    cout << "rms = " << array.rms() << endl;
+    
+}
